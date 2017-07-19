@@ -1,6 +1,12 @@
 OpenAPI
 ================
 
+대한민국 공공데이터 포털의 OpenAPI를 이용한 자료 수집 예제임.
+
+아래 코드는 네이버 블로그에서 가져옴
+
+<http://blog.naver.com/PostView.nhn?blogId=juhy9212&logNo=221007989739&redirect=Dlog&widgetTypeCall=true>
+
 ``` r
 #getwd()
 api_url <- "http://openapi.molit.go.kr/OpenAPI_ToolInstallPackage/service/rest/RTMSOBJSvc/getRTMSDataSvcAptTradeDev?LAWD_CD="
@@ -42,15 +48,13 @@ require(data.table)
 total<-list()
 
 for(i in 1:length(urllist)){
-
   item <- list()
   item_temp_dt<-data.table()
     raw.data <- xmlTreeParse(urllist[i], useInternalNodes = TRUE,encoding = "utf-8")
   rootNode <- xmlRoot(raw.data)
   items <- rootNode[[2]][['items']]
-  
   size <- xmlSize(items)
-  
+ 
   for(j in 1:size){
     item_temp <- xmlSApply(items[[j]],xmlValue)
     item_temp_dt <- data.table( price = item_temp[1],
@@ -72,11 +76,10 @@ for(i in 1:length(urllist)){
   total[[i]] <- rbindlist(item)
  }
 
- seoul_apt_2017 <- rbindlist(total)
- a <- gsub(",","",seoul_apt_2017$price)
- a2 <- as.numeric(a)
-
-hist(log(a2))
+seoul_apt_2017 <- rbindlist(total)
+a <- gsub(",","",seoul_apt_2017$price)
+seoul_apt_2017$price_nm <- as.numeric(a)
+hist(seoul_apt_2017$price_nm)
 ```
 
 ![](openAPI_test_files/figure-markdown_github-ascii_identifiers/unnamed-chunk-1-1.png)

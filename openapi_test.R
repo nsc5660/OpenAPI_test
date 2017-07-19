@@ -66,3 +66,12 @@ for(i in 1:length(urllist)){
 }
 
 seoul_apt_2017 <- rbindlist(total)
+
+a <- gsub(",","",seoul_apt_2017$price)
+a2 <- as.numeric(a)
+hist(log(a2))
+
+seoul_apt_2017$price_nm <- as.numeric(a)
+hist(seoul_apt_2017$price_nm)
+
+
