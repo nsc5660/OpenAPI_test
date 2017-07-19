@@ -4,11 +4,11 @@ output: rmarkdown::github_document
 ---
 
 ```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE)
+knitr::opts_knit$set(root.dir='C:/work/201712_openapi/OpenAPI_test')
 ```
 
 ```{r }
-getwd()
+#getwd()
 api_url <- "http://openapi.molit.go.kr/OpenAPI_ToolInstallPackage/service/rest/RTMSOBJSvc/getRTMSDataSvcAptTradeDev?LAWD_CD="
 service_key <- "N5wsj39GDaAiQLtjarV3fxP4cIotnL95k5qplhB8D3v4lFZTsK421dgVGVRg9vhb7wjD92aseJYFHDvNZk45Yg%3D%3D"
 
@@ -24,15 +24,14 @@ datelist <-c("201701","201702","201703","201704")
 
 urllist <- list()
 cnt <-0
-
 for(i in 1:length(locCode)){
-  for(j in 1:length(datelist)){
+ for(j in 1:length(datelist)){
     cnt = cnt + 1
     urllist[cnt] <- paste0(api_url,locCode[i],"&DEAL_YMD=",datelist[j],"&numOfRows=1000","&serviceKey=",service_key) 
   }
-}
+ }
 
-urllist
+#urllist
 
 library(XML)
 raw.data <- xmlTreeParse(urllist[i], useInternalNodes = TRUE, encoding = "utf-8")
@@ -45,7 +44,7 @@ require(data.table)
 total<-list()
 
 for(i in 1:length(urllist)){
-  
+
   item <- list()
   item_temp_dt<-data.table()
     raw.data <- xmlTreeParse(urllist[i], useInternalNodes = TRUE,encoding = "utf-8")
@@ -73,12 +72,12 @@ for(i in 1:length(urllist)){
     item[[j]]<-item_temp_dt
   }
   total[[i]] <- rbindlist(item)
-}
+ }
 
-seoul_apt_2017 <- rbindlist(total)
+ seoul_apt_2017 <- rbindlist(total)
+ a <- gsub(",","",seoul_apt_2017$price)
+ a2 <- as.numeric(a)
 
-a <- gsub(",","",seoul_apt_2017$price)
-a2 <- as.numeric(a)
 hist(log(a2))
 
 ```
